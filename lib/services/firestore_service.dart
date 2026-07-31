@@ -3,7 +3,7 @@ import '../models/livre.dart';
 
 class FirestoreService {
   final CollectionReference _livresRef =
-      FirebaseFirestore.instance.collection('livres');
+      FirebaseFirestore.instance.collection('Livres');
 
   Stream<List<Livre>> getLivres() {
     return _livresRef.snapshots().map((snapshot) {

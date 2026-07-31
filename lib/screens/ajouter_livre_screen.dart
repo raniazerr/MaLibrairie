@@ -28,7 +28,7 @@ class _AjouterLivreScreenState extends State<AjouterLivreScreen> {
     try {
       final userId = FirebaseAuth.instance.currentUser?.uid ?? '';
 
-      await FirebaseFirestore.instance.collection('livres').add({
+      await FirebaseFirestore.instance.collection('Livres').add({
         'titre': _titreController.text,
         'auteur': _auteurController.text,
         'resume': _resumeController.text,
