@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../services/firestore_service.dart';
+import '../services/theme_service.dart';
 import '../models/livre.dart';
 import 'ajouter_livre_screen.dart';
 
@@ -9,9 +10,18 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('Mon UID: ${FirebaseAuth.instance.currentUser?.uid}');
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        leading: ValueListenableBuilder<ThemeMode>(
+          valueListenable: themeNotifier,
+          builder: (context, mode, _) {
+            return IconButton(
+              icon: Icon(mode == ThemeMode.dark ? Icons.light_mode : Icons.dark_mode),
+              onPressed: toggleTheme,
+            );
+          },
+        ),
         title: const Text('MaBibliothèque'),
         actions: [
           IconButton(
