@@ -3,7 +3,7 @@ class Livre {
   final String titre;
   final String auteur;
   final String resume;
-  final String imageUrl;
+  final String image;
   final String statut;
   final String userId;
 
@@ -12,7 +12,7 @@ class Livre {
     required this.titre,
     required this.auteur,
     required this.resume,
-    required this.imageUrl,
+    required this.image,
     required this.statut,
     required this.userId,
   });
@@ -23,7 +23,7 @@ class Livre {
       titre: data['titre'] ?? '',
       auteur: data['auteur'] ?? '',
       resume: data['resume'] ?? '',
-      imageUrl: data['imageUrl'] ?? '',
+      image: data['image'] ?? '',
       statut: data['statut'] ?? 'a_lire',
       userId: data['userId'] ?? '',
     );

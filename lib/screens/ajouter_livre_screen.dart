@@ -32,7 +32,7 @@ class _AjouterLivreScreenState extends State<AjouterLivreScreen> {
         'titre': _titreController.text,
         'auteur': _auteurController.text,
         'resume': _resumeController.text,
-        'imageUrl': _imageController.text,
+        'image': _imageController.text,
         'statut': _statut,
         'userId': userId,
       });

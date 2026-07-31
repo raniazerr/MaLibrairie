@@ -43,15 +43,22 @@ class HomeScreen extends StatelessWidget {
               return Card(
                 margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 child: ListTile(
-                  leading: livre.imageUrl.isNotEmpty
-                      ? Image.network(
-                          livre.imageUrl,
-                          width: 50,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Icon(Icons.book, size: 40),
-                        )
-                      : const Icon(Icons.book, size: 40),
+                  leading: livre.image.isNotEmpty
+    ? SizedBox(
+        width: 50,
+        height: 50,
+        child: Image.network(
+          livre.image,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Tooltip(
+              message: error.toString(),
+              child: const Icon(Icons.error, color: Colors.red, size: 40),
+            );
+          },
+        ),
+      )
+    : const Icon(Icons.book, size: 40),
                   title: Text(livre.titre),
                   subtitle: Text('${livre.auteur} • ${livre.statut}'),
                 ),
