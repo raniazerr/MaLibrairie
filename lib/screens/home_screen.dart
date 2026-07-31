@@ -9,6 +9,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('Mon UID: ${FirebaseAuth.instance.currentUser?.uid}');
     return Scaffold(
       appBar: AppBar(
         title: const Text('MaBibliothèque'),
