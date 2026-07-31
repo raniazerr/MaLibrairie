@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "920760236789",
+    "project_id": "malibrairie-2aa2a",
+    "storage_bucket": "malibrairie-2aa2a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:920760236789:android:4ae6592318e8d1bf7d63bc",
+        "android_client_info": {
+          "package_name": "com.example.malibrairie"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDV1vTAj4iZvvZ_jig1_mYVWDRYR4nOcXs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
