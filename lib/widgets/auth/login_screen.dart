@@ -37,43 +37,66 @@ class _LoginScreenState extends State<LoginScreen> {
       _isLoading = false;
       _errorMessage = error;
     });
-    // Si error == null, le StreamBuilder dans main.dart bascule
-    // automatiquement vers la boutique — pas besoin de navigation manuelle.
   }
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.symmetric(horizontal: 28),
           child: Form(
             key: _formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                Container(
+                  alignment: Alignment.center,
+                  width: 72,
+                  height: 72,
+                  decoration: BoxDecoration(
+                    color: colors.primary.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Icon(Icons.menu_book_rounded, color: colors.primary, size: 36),
+                ),
+                const SizedBox(height: 20),
                 const Text(
                   'MaLibrairie',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 6),
+                Text(
+                  'Connecte-toi pour retrouver tes livres',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+                ),
+                const SizedBox(height: 36),
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(labelText: 'Email'),
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                    prefixIcon: Icon(Icons.mail_outline),
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) return 'Email requis';
                     if (!value.contains('@')) return 'Email invalide';
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 14),
                 TextFormField(
                   controller: _passwordController,
                   obscureText: true,
-                  decoration: const InputDecoration(labelText: 'Mot de passe'),
+                  decoration: const InputDecoration(
+                    labelText: 'Mot de passe',
+                    prefixIcon: Icon(Icons.lock_outline),
+                  ),
                   validator: (value) {
                     if (value == null || value.length < 6) {
                       return '6 caractères minimum';
@@ -82,24 +105,28 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                 ),
                 if (_errorMessage != null) ...[
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 14),
                   Text(
                     _errorMessage!,
-                    style: const TextStyle(color: Colors.red),
+                    style: const TextStyle(color: Colors.redAccent),
                     textAlign: TextAlign.center,
                   ),
                 ],
-                const SizedBox(height: 24),
+                const SizedBox(height: 28),
                 ElevatedButton(
                   onPressed: _isLoading ? null : _submit,
                   child: _isLoading
                       ? const SizedBox(
                           height: 20,
                           width: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
                         )
                       : const Text('Se connecter'),
                 ),
+                const SizedBox(height: 4),
                 TextButton(
                   onPressed: () {
                     Navigator.push(

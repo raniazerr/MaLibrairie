@@ -56,44 +56,58 @@ class _AjouterLivreScreenState extends State<AjouterLivreScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Ajouter un livre')),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Form(
           key: _formKey,
           child: ListView(
             children: [
               TextFormField(
                 controller: _titreController,
-                decoration: const InputDecoration(labelText: 'Titre'),
+                decoration: const InputDecoration(
+                  labelText: 'Titre',
+                  prefixIcon: Icon(Icons.title),
+                ),
                 validator: (value) =>
                     value == null || value.isEmpty ? 'Champ requis' : null,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 14),
               TextFormField(
                 controller: _auteurController,
-                decoration: const InputDecoration(labelText: 'Auteur'),
+                decoration: const InputDecoration(
+                  labelText: 'Auteur',
+                  prefixIcon: Icon(Icons.person_outline),
+                ),
                 validator: (value) =>
                     value == null || value.isEmpty ? 'Champ requis' : null,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 14),
               TextFormField(
                 controller: _resumeController,
-                decoration: const InputDecoration(labelText: 'Résumé'),
-                maxLines: 3,
+                decoration: const InputDecoration(
+                  labelText: 'Résumé',
+                  alignLabelWithHint: true,
+                  prefixIcon: Icon(Icons.notes),
+                ),
+                maxLines: 4,
                 validator: (value) =>
                     value == null || value.isEmpty ? 'Champ requis' : null,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 14),
               TextFormField(
                 controller: _imageController,
                 decoration: const InputDecoration(
                   labelText: 'URL de la couverture',
                   hintText: 'https://...',
+                  prefixIcon: Icon(Icons.image_outlined),
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 14),
               DropdownButtonFormField<String>(
                 initialValue: _statut,
-                decoration: const InputDecoration(labelText: 'Statut'),
+                decoration: const InputDecoration(
+                  labelText: 'Statut',
+                  prefixIcon: Icon(Icons.flag_outlined),
+                ),
                 items: const [
                   DropdownMenuItem(value: 'a_lire', child: Text('À lire')),
                   DropdownMenuItem(value: 'en_cours', child: Text('En cours')),
@@ -103,11 +117,15 @@ class _AjouterLivreScreenState extends State<AjouterLivreScreen> {
                   setState(() => _statut = value!);
                 },
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 28),
               ElevatedButton(
                 onPressed: _enCours ? null : _ajouterLivre,
                 child: _enCours
-                    ? const CircularProgressIndicator()
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                      )
                     : const Text('Ajouter le livre'),
               ),
             ],
