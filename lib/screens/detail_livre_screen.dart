@@ -2,51 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/livre.dart';
 
-class DetailLivreScreen extends StatefulWidget {
+class LivreDetailScreen extends StatefulWidget {
   final Livre livre;
 
-  const DetailLivreScreen({super.key, required this.livre});
+  const LivreDetailScreen({super.key, required this.livre});
 
   @override
-  State<DetailLivreScreen> createState() => _DetailLivreScreenState();
+  State<LivreDetailScreen> createState() => _LivreDetailScreenState();
 }
 
-class _DetailLivreScreenState extends State<DetailLivreScreen> {
-  bool _suppressionEnCours = false;
+class _LivreDetailScreenState extends State<LivreDetailScreen> {
+  late String _statutActuel;
 
-  Future<void> _supprimerLivre() async {
-    final confirmer = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Supprimer ce livre ?'),
-        content: Text('Voulez-vous vraiment supprimer "${widget.livre.titre}" ? Cette action est irréversible.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Annuler'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Supprimer'),
-          ),
-        ],
-      ),
-    );
+  @override
+  void initState() {
+    super.initState();
+    _statutActuel = widget.livre.statut;
+  }
 
-    if (confirmer != true) return;
-
-    setState(() => _suppressionEnCours = true);
+  Future<void> _changerStatut(String nouveauStatut) async {
+    setState(() => _statutActuel = nouveauStatut);
 
     try {
       await FirebaseFirestore.instance
           .collection('Livres')
           .doc(widget.livre.id)
-          .delete();
+          .update({'statut': nouveauStatut});
 
       if (mounted) {
-        Navigator.pop(context); // retour au home_screen après suppression
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Livre supprimé')),
+          SnackBar(content: Text('Statut mis à jour : ${_statutLisible(nouveauStatut)}')),
         );
       }
     } catch (e) {
@@ -55,8 +40,32 @@ class _DetailLivreScreenState extends State<DetailLivreScreen> {
           SnackBar(content: Text('Erreur: $e')),
         );
       }
-    } finally {
-      if (mounted) setState(() => _suppressionEnCours = false);
+    }
+  }
+
+  String _statutLisible(String statut) {
+    switch (statut) {
+      case 'a_lire':
+        return 'À lire';
+      case 'en_cours':
+        return 'En cours';
+      case 'lu':
+        return 'Lu';
+      default:
+        return statut;
+    }
+  }
+
+  Color _couleurStatut(String statut) {
+    switch (statut) {
+      case 'a_lire':
+        return Colors.orange[100]!;
+      case 'en_cours':
+        return Colors.blue[100]!;
+      case 'lu':
+        return Colors.green[100]!;
+      default:
+        return Colors.grey[200]!;
     }
   }
 
@@ -65,59 +74,80 @@ class _DetailLivreScreenState extends State<DetailLivreScreen> {
     final livre = widget.livre;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(livre.titre),
-        actions: [
-          IconButton(
-            icon: _suppressionEnCours
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                  )
-                : const Icon(Icons.delete),
-            onPressed: _suppressionEnCours ? null : _supprimerLivre,
-          ),
-        ],
-      ),
+      appBar: AppBar(title: Text(livre.titre)),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (livre.image.isNotEmpty)
-              Center(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
-                    livre.image,
-                    height: 200,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) =>
-                        const Icon(Icons.error, size: 80, color: Colors.red),
-                  ),
+              Image.network(
+                livre.image,
+                width: double.infinity,
+                height: 300,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  height: 300,
+                  color: Colors.grey[300],
+                  child: const Icon(Icons.book, size: 80),
                 ),
+              )
+            else
+              Container(
+                height: 300,
+                color: Colors.grey[300],
+                child: const Icon(Icons.book, size: 80),
               ),
-            const SizedBox(height: 16),
-            Text(
-              livre.titre,
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              livre.auteur,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.grey),
-            ),
-            const SizedBox(height: 8),
-            Chip(label: Text(livre.statut)),
-            const SizedBox(height: 16),
-            Text(
-              livre.resume,
-              style: Theme.of(context).textTheme.bodyMedium,
+
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    livre.titre,
+                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    livre.auteur,
+                    style: TextStyle(fontSize: 16, color: Colors.grey[600], fontStyle: FontStyle.italic),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Sélecteur de statut
+                  const Text('Statut', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    children: [
+                      _buildStatutChip('a_lire', 'À lire'),
+                      _buildStatutChip('en_cours', 'En cours'),
+                      _buildStatutChip('lu', 'Lu'),
+                    ],
+                  ),
+
+                  const SizedBox(height: 20),
+                  const Text('Résumé', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 8),
+                  Text(livre.resume, style: const TextStyle(fontSize: 16, height: 1.5)),
+                ],
+              ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildStatutChip(String valeur, String label) {
+    final estSelectionne = _statutActuel == valeur;
+    return ChoiceChip(
+      label: Text(label),
+      selected: estSelectionne,
+      selectedColor: _couleurStatut(valeur),
+      onSelected: (selected) {
+        if (selected) _changerStatut(valeur);
+      },
     );
   }
 }

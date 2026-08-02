@@ -55,27 +55,27 @@ class HomeScreen extends StatelessWidget {
                 margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 child: ListTile(
                   leading: livre.image.isNotEmpty
-    ? SizedBox(
-        width: 50,
-        height: 50,
-        child: Image.network(
-          livre.image,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return Tooltip(
-              message: error.toString(),
-              child: const Icon(Icons.error, color: Colors.red, size: 40),
-            );
-          },
-        ),
-      )
-    : const Icon(Icons.book, size: 40),
+                      ? SizedBox(
+                          width: 50,
+                          height: 50,
+                          child: Image.network(
+                            livre.image,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Tooltip(
+                                message: error.toString(),
+                                child: const Icon(Icons.error, color: Colors.red, size: 40),
+                              );
+                            },
+                          ),
+                        )
+                      : const Icon(Icons.book, size: 40),
                   title: Text(livre.titre),
                   subtitle: Text('${livre.auteur} • ${livre.statut}'),
-                  onTap: () {                
+                  onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => DetailLivreScreen(livre: livre)),
+                      MaterialPageRoute(builder: (context) => LivreDetailScreen(livre: livre)),
                     );
                   },
                 ),
