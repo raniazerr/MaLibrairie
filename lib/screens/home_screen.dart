@@ -4,6 +4,7 @@ import '../services/firestore_service.dart';
 import '../services/theme_service.dart';
 import '../models/livre.dart';
 import 'ajouter_livre_screen.dart';
+import 'detail_livre_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -71,6 +72,12 @@ class HomeScreen extends StatelessWidget {
     : const Icon(Icons.book, size: 40),
                   title: Text(livre.titre),
                   subtitle: Text('${livre.auteur} • ${livre.statut}'),
+                  onTap: () {                
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => DetailLivreScreen(livre: livre)),
+                    );
+                  },
                 ),
               );
             },
